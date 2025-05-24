@@ -1,3 +1,3 @@
 # ansible_tutorial
 
- Ansible tutorial repo.
+Ansible tutorial repository.
