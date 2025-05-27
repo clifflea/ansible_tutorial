@@ -1,4 +1,4 @@
-debian-01
-debian-02
-rhel-01
-rhel-02
+debian-01 apache_package=apache2 php_package=libapache2-mod-php
+debian-02 apache_package=apache2 php_package=libapache2-mod-php
+rhel-01 apache_package=httpd php_package=php
+rhel-02 apache_package=httpd php_package=php
