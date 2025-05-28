@@ -9,6 +9,7 @@
     dnf:
       update_only: yes
       update_cache: yes
+      autoremove: true
     when: ansible_distribution in ["RedHat", "CentOS"]
 
   - name: install updates (Debian)
@@ -16,6 +17,7 @@
     apt:
       upgrade: dist
       update_cache: yes
+      autoremove: true
     when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
 
 
@@ -41,6 +43,15 @@
       state: latest
     when: ansible_distribution in ["RedHat", "CentOS"]
 
+  - name: copy default html file for sites
+    tags: apache,apache2,httpd
+    copy:
+      src: default_site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644
+
 
 - hosts: db_servers
   become: true
@@ -65,11 +76,21 @@
   become: true
   tasks:
 
-  - name: install samba package
-    tags: samba
+  - name: install samba package (RedHat)
+    tags: samba,redhat,centos
     package:
       name: samba
       state: latest
+    when: ansible_distribution in ["RedHat", "CentOS"]
+
+  - name: install samba package (Debian)
+    tags: samba,debian,ubuntu,linuxmint
+    package:
+      name:
+        - samba
+        - bpytop
+      state: latest
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
 
 
 - hosts: vbox_hosts
