@@ -10,6 +10,7 @@ debian-02
 
 [file_servers]
 rhel-02
+auriga
 
 [workstations]
 #roxy
