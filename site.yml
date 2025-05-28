@@ -43,6 +43,30 @@
       state: latest
     when: ansible_distribution in ["RedHat", "CentOS"]
 
+  - name: start httpd (RedHat)
+    tags: apache,httpd,redhat,centos
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+    when: ansible_distribution in ["RedHat", "CentOS"]
+
+  - name: change email address for admin (RedHat)
+    tags: apache,httpd,redhat,centos
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin somebody@home.net
+    when: ansible_distribution in ["RedHat", "CentOS"]
+    register: var_httpd
+
+  - name: restart httpd (RedHat)
+    tags: apache,httpd,redhat,centos
+    service:
+      name: httpd
+      state: restarted
+    when: var_httpd.changed
+
   - name: copy default html file for sites
     tags: apache,apache2,httpd
     copy:
@@ -93,29 +117,15 @@
     when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
 
 
-- hosts: vbox_hosts
-  become: true
-  tasks:
+#- hosts: workstations
+#  become: true
+#  tasks:
 
-  - name: install bpytop, tmux packages
-    package:
-      name:
-        - bpytop
-        - tmux
-      state: latest
-
-
-- hosts: workstations
-  become: true
-  tasks:
-
-  - name: install packages  (workstations)
-    package:
-      name:
-        - bpytop
-        - tmux
-        - bat
-        - spell
-        - colordiff
-        - ncdu
-      state: latest
+#  - name: install terraform
+#    unarchive:
+#      src: https://releases.hashicorp.com/terraform/1.12.1/terraform_1.12.1_linux_amd64.zip
+#      dest: /usr/local/bin
+#      remote_src: yes
+#      mode: 0755
+#      owner: root
+#      group: root
