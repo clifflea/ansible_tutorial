@@ -1,6 +1,3 @@
-[vbox_hosts]
-chunga
-
 [web_servers]
 debian-01
 rhel-01
@@ -10,7 +7,10 @@ debian-02
 
 [file_servers]
 rhel-02
-auriga
+
+[vbox_hosts]
 
 [workstations]
-#roxy
+auriga
+chunga
+linuxmint-01
