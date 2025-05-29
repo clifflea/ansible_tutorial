@@ -1,0 +1,77 @@
+# ~/.bash_aliases: executed by .bashrc
+
+# some shell aliases
+alias lh='ls -lh'
+alias lsless='ls -la | less'
+alias la='ls -A'
+alias l='ls -CF'
+alias rm='rm -i'
+alias mv='mv -i'
+alias cp='cp -iv'
+alias bat='batcat'
+alias df="df -h -x squashfs -x tmpfs -x devtmpfs"
+alias du='du -hsc'
+alias mount='mount | column -t'
+alias diff='colordiff -u'
+
+# shutdown, reboot
+alias yyy='sudo reboot'
+alias zzz='sudo shutdown -h now'
+
+alias ping='ping -D'
+alias sourcebash='source ~/.bash_aliases'
+
+# editors
+#alias emacs='emacs -geometry 100x40+64+0'
+#alias emacsnox='emacs23-nox '
+
+# web
+#alias chrome='google-chrome --enable-plugins'
+
+# memory, cpu
+alias mem5="ps auxf | sort -nr -k 4 | head -5"	# top 5 memory processes
+alias cpu5="ps auxf | sort -nr -k 3 | head -5"  # top 5 CPU processes
+
+# network
+alias extip="curl icanhazip.com"	# get external IP
+alias speedtest="curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3 -"
+
+# apt
+alias install="sudo apt install"
+alias autoremove='sudo apt autoremove'
+alias upgrade="sudo apt update && sudo apt upgrade"
+alias distupgrade="sudo apt update && sudo apt dist-upgrade && sudo apt autoremove"
+alias aptitude='sudo aptitude'
+
+# git
+alias gitpush='git push origin main'
+
+# tail
+alias tailmessages='sudo tail -f /var/log/messages'
+alias tailsyslog='sudo tail -f /var/log/syslog'
+
+# music/video
+alias mp='mplayer -fs -nolirc -zoom -cache 8192'
+#alias mpp='mplayer -fs -loop 0 -nolirc -zoom -cache 8192 '
+alias mpp='mp *'
+alias mpt='mpp -aspect 4:3 '
+alias mpw='mpp -aspect 16:9 '
+alias mps='mpp -shuffle *'
+
+# compression
+alias unrarall='unrar e *'
+
+# rdp, vnc
+alias realvnc='vncviewer'
+#alias xrdp='xfreerdp /u:cliff.leong /v:'
+#alias rdp='rdesktop -u username -p - -d nj -g 1440x900 '
+#alias rdpu='rdesktop -p - -d nj -g 1440x900 -u '
+
+# screensaver
+#alias xlock='xlock -mode fire'
+#alias xfish='xfishtank -c black'
+#alias xfishroot='xfishtank -d'
+#alias killfish='killall xfishtank'
+
+# emulation
+#alias wine_explorer='wine "c:\windows\explorer.exe"'
