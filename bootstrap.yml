@@ -1,0 +1,54 @@
+---
+#
+# bootstrap.yml
+# Playbook to run against newly built servers
+#
+# usage:  ansible-playbook --ask-become-pass bootstrap.yml
+#
+
+# run updates
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: install updates (RedHat)
+    tags: always
+    dnf:
+      update_only: yes
+      update_cache: yes
+      autoremove: true
+    when: ansible_distribution in ["RedHat", "CentOS"]
+
+  - name: install updates (Debian)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+      autoremove: true
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
+
+# add user to run playbooks as
+- hosts: all
+  become: true
+  tasks:
+
+    - name: create zappa user
+      tags: always
+      user:
+        name: zappa
+        groups: root
+
+    - name: add ssh key for zappa
+      tags: always
+      authorized_key:
+        user: zappa
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKJX/d8+CNEPZdFAKTDhKJSGwIW4/0/fRl0LpYmErOh8 ansible"
+
+    - name: add sudoers file for zappa
+      tags: always
+      copy:
+        src: sudoer_zappa
+        dest: /etc/sudoers.d/zappa
+        owner: root
+        group: root
+        mode: 0440

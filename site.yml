@@ -1,26 +1,46 @@
 ---
+#
+# site.yml
+# Update all servers in inventory file
+#
+# usage:  ansible-playbook site.yml
+#
 
+# update repository cache
 - hosts: all
   become: true
   pre_tasks:
 
-  - name: install updates (RedHat)
+  - name: update repo cache (RedHat)
     tags: always
     dnf:
-      update_only: yes
       update_cache: yes
       autoremove: true
+    changed_when: false
     when: ansible_distribution in ["RedHat", "CentOS"]
 
-  - name: install updates (Debian)
+  - name: update repo cache (Debian)
     tags: always
     apt:
-      upgrade: dist
       update_cache: yes
       autoremove: true
+    changed_when: false
     when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
 
 
+# ssh key
+- hosts: all
+  become: true
+  tasks:
+
+    - name: add ssh key for zappa
+      tags: always
+      authorized_key:
+        user: zappa
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKJX/d8+CNEPZdFAKTDhKJSGwIW4/0/fRl0LpYmErOh8 ansible"
+
+
+# web_servers
 - hosts: web_servers
   become: true
   tasks:
@@ -77,6 +97,7 @@
       mode: 0644
 
 
+# db_servers
 - hosts: db_servers
   become: true
   tasks:
@@ -96,6 +117,7 @@
     when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
 
 
+# file_servers
 - hosts: file_servers
   become: true
   tasks:
@@ -115,6 +137,8 @@
         - bpytop
       state: latest
     when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
+
+
 
 
 #- hosts: workstations
