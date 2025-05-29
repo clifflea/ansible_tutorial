@@ -1,0 +1,1 @@
+zappa ALL=(ALL) NOPASSWD: ALL
