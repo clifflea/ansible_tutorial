@@ -1,0 +1,4 @@
+- name: add ssh key for zappa
+  authorized_key:
+    user: zappa
+    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKJX/d8+CNEPZdFAKTDhKJSGwIW4/0/fRl0LpYmErOh8 ansible"

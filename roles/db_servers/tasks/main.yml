@@ -1,0 +1,13 @@
+- name: install mariadb package (RedHat)
+  tags: mariadb,redhat,centos
+  dnf:
+    name: mariadb
+    state: latest
+  when: ansible_distribution in ["RedHat", "CentOS"]
+
+- name: install mariadb package (Debian)
+  tags: mariadb,debian,ubuntu,linuxmint
+  apt:
+    name: mariadb-server
+    state: latest
+  when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
