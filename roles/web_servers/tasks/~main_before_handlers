@@ -30,17 +30,27 @@
     enabled: yes
 #  when: ansible_distribution in ["RedHat", "CentOS"]
 
-# change email addr to trigger the handler 'restart_apache'
-# note: this will fail in debian because file is in different location
+# this will fail in debian. file is in different location
 - name: change email address for admin (RedHat)
   tags: apache,httpd,redhat,centos
   lineinfile:
     path: /etc/httpd/conf/httpd.conf
     regexp: '^ServerAdmin'
-    line: ServerAdmin somedude@somewhere.org
+    line: ServerAdmin somebody@home.net
   when: ansible_distribution in ["RedHat", "CentOS"]
-# trigger a handler called restart_apache
-  notify: restart_apache
+#  register: var_httpd
+  register: apache
+
+# when httpd.conf is changed above, variable apache will change & trigger service restart
+#- name: restart httpd (RedHat)
+- name: restart httpd
+#  tags: apache,httpd,redhat,centos
+  tags: apache,httpd
+  service:
+    name: "{{ apache_service }}"
+    state: restarted
+#  when: var_httpd.changed
+  when: apache.changed
 
 - name: copy default html file for sites
   tags: apache,apache2,httpd
