@@ -1,0 +1,70 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: install updates (RedHat)
+    tags: always
+    dnf:
+      update_only: yes
+      update_cache: yes
+      autoremove: true
+    when: ansible_distribution in ["RedHat", "CentOS"]
+
+  - name: install updates (Debian)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+      autoremove: true
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
+
+
+- hosts: vbox_hosts
+  become: true
+  tasks:
+
+  - name: install bpytop, tmux packages
+    package:
+      name:
+        - bpytop
+        - tmux
+      state: latest
+
+
+- hosts: workstations
+  become: true
+  tasks:
+
+  - name: copy .bash_aliases file (Debian)
+    tags: alias,bash,debian,ubuntu,linuxmint
+    copy:
+      src: bash_aliases
+      dest: /home/cleong/.bash_aliases
+      owner: cleong
+      group: cleong
+      mode: 0644
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
+
+  - name: install packages (workstations)
+    tags: packages
+    package:
+      name:
+        - unzip
+        - bpytop
+        - tmux
+        - bat
+        - spell
+        - colordiff
+        - ncdu
+      state: latest
+
+#  - name: install terraform
+#    unarchive:
+#      src: https://releases.hashicorp.com/terraform/1.12.1/terraform_1.12.1_linux_amd64.zip
+#      dest: /usr/local/bin
+#      remote_src: yes
+#      mode: 0755
+#      owner: root
+#      group: root
