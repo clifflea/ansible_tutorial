@@ -40,6 +40,35 @@
         key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKJX/d8+CNEPZdFAKTDhKJSGwIW4/0/fRl0LpYmErOh8 ansible"
 
 
+# workstations
+- hosts: workstations
+  become: true
+  tasks:
+
+  - name: copy .bash_aliases file (Debian)
+    tags: alias,bash,debian,ubuntu,linuxmint
+    copy:
+      src: bash_aliases
+      dest: /home/cleong/.bash_aliases
+      owner: cleong
+      group: cleong
+      mode: 0644
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
+
+  - name: install packages (workstations)
+    tags: packages
+    package:
+      name:
+        - unzip
+        - bpytop
+        - tmux
+        - bat
+        - spell
+        - colordiff
+        - ncdu
+      state: latest
+
+
 # web_servers
 - hosts: web_servers
   become: true
