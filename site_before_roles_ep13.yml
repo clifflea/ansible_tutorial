@@ -1,0 +1,155 @@
+---
+#
+# site.yml
+# Update all servers in inventory file
+#
+# usage:  ansible-playbook site.yml
+#
+
+# update repository cache
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: update repo cache (RedHat)
+    tags: always
+    dnf:
+      update_cache: yes
+      autoremove: true
+    changed_when: false
+    when: ansible_distribution in ["RedHat", "CentOS"]
+
+  - name: update repo cache (Debian)
+    tags: always
+    apt:
+      update_cache: yes
+      autoremove: true
+    changed_when: false
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
+
+
+# ssh key
+- hosts: all
+  become: true
+  tasks:
+
+    - name: add ssh key for zappa
+      tags: always
+      authorized_key:
+        user: zappa
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKJX/d8+CNEPZdFAKTDhKJSGwIW4/0/fRl0LpYmErOh8 ansible"
+
+
+# web_servers
+- hosts: web_servers
+  become: true
+  tasks:
+
+  - name: install apache2 and php packages (Debian)
+    tags: apache,apache2,debian,ubuntu,linuxmint
+    apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
+
+  - name: install httpd and php packages (RedHat)
+    tags: apache,httpd,redhat,centos
+    dnf:
+      name:
+        - httpd
+        - php
+      state: latest
+    when: ansible_distribution in ["RedHat", "CentOS"]
+
+  - name: start httpd (RedHat)
+    tags: apache,httpd,redhat,centos
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+    when: ansible_distribution in ["RedHat", "CentOS"]
+
+  - name: change email address for admin (RedHat)
+    tags: apache,httpd,redhat,centos
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin somebody@home.net
+    when: ansible_distribution in ["RedHat", "CentOS"]
+    register: var_httpd
+
+  - name: restart httpd (RedHat)
+    tags: apache,httpd,redhat,centos
+    service:
+      name: httpd
+      state: restarted
+    when: var_httpd.changed
+
+  - name: copy default html file for sites
+    tags: apache,apache2,httpd
+    copy:
+      src: default_site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644
+
+
+# db_servers
+- hosts: db_servers
+  become: true
+  tasks:
+
+  - name: install mariadb package (RedHat)
+    tags: mariadb,redhat,centos
+    dnf:
+      name: mariadb
+      state: latest
+    when: ansible_distribution in ["RedHat", "CentOS"]
+
+  - name: install mariadb package (Debian)
+    tags: mariadb,debian,ubuntu,linuxmint
+    apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
+
+
+# file_servers
+- hosts: file_servers
+  become: true
+  tasks:
+
+  - name: install samba package (RedHat)
+    tags: samba,redhat,centos
+    package:
+      name: samba
+      state: latest
+    when: ansible_distribution in ["RedHat", "CentOS"]
+
+  - name: install samba package (Debian)
+    tags: samba,debian,ubuntu,linuxmint
+    package:
+      name:
+        - samba
+        - bpytop
+      state: latest
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
+
+
+
+
+#- hosts: workstations
+#  become: true
+#  tasks:
+
+#  - name: install terraform
+#    unarchive:
+#      src: https://releases.hashicorp.com/terraform/1.12.1/terraform_1.12.1_linux_amd64.zip
+#      dest: /usr/local/bin
+#      remote_src: yes
+#      mode: 0755
+#      owner: root
+#      group: root
