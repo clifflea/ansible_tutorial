@@ -1,17 +1,23 @@
+[base]
+centos-01
+fedora-01
+debian-03
+
+[workstations]
+#chunga
+linuxmint-01
+popos-01
+#zoot
+
 [web_servers]
 debian-01
 rhel-01
+#semaphore
 
 [db_servers]
 debian-02
+#semaphore
 
 [file_servers]
 rhel-02
-auriga
-
-[vbox_hosts]
-
-[workstations]
-auriga
-chunga
-linuxmint-01
+#auriga

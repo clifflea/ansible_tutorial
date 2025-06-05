@@ -25,7 +25,7 @@
       upgrade: dist
       update_cache: yes
       autoremove: true
-    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint", "Pop!_OS"]
 
 # add user to run playbooks as
 - hosts: all
