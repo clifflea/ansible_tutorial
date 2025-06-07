@@ -1,0 +1,15 @@
+# Note: commented lines are before host_vars used
+
+- name: install nginx
+  tags: nginx
+  package:
+    name:
+      - "{{ nginx_package_name }}"
+    state: latest
+
+- name: start and enable nginx service
+  tags: nginx
+  service:
+    name: "{{ nginx_service }}"
+    state: started
+    enabled: yes
