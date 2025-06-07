@@ -1,18 +1,19 @@
 [base]
 centos-01
 fedora-01
-debian-03
 
 [workstations]
 #chunga
 linuxmint-01
 popos-01
-#zoot
 
 [web_servers]
 debian-01
 rhel-01
 #semaphore
+
+[nginx_servers]
+debian-03
 
 [db_servers]
 debian-02
