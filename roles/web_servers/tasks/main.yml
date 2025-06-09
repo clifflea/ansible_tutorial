@@ -37,8 +37,8 @@
   lineinfile:
     path: /etc/httpd/conf/httpd.conf
     regexp: '^ServerAdmin'
-    line: ServerAdmin somedude@somewhere.org
-  when: ansible_distribution in ["RedHat", "CentOS"]
+    line: ServerAdmin cliff@somewhere.org
+  when: ansible_distribution in ["RedHat", "CentOS", "Fedora"]
 # trigger a handler called restart_apache
   notify: restart_apache
 

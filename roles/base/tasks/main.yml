@@ -12,3 +12,28 @@
     group: root
     mode: 0644
   notify: restart_sshd
+
+#
+# Install ufw
+#
+#- name: install epel-release on RHEL first (RedHat)
+#  tags: epel
+#  dnf:
+#    name: epel-release
+#    state: latest
+#  when: ansible_distribution in ["RedHat", "CentOS", "Fedora"]
+
+- name: install ufw
+  tags: ufw
+  apt:
+    name: ufw
+    state: latest
+  when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint", "Pop!_OS"]
+
+- name: start and enable ufw
+  tags: ufw
+  service:
+    name: ufw
+    state: started
+    enabled: yes
+  when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint", "Pop!_OS"]

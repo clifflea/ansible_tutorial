@@ -1,24 +1,23 @@
-[base]
-centos-01
-fedora-01
-
 [workstations]
 #chunga
-linuxmint-01
-popos-01
+#popos-01
 
 [web_servers]
-debian-01
-rhel-01
-#semaphore
+#debian-01
+#rhel-01
+semaphore
 
 [nginx_servers]
 debian-03
+centos-01
+#fedora-01
 
 [db_servers]
-debian-02
-#semaphore
+#debian-02
+semaphore
 
 [file_servers]
-rhel-02
+#rhel-02
 #auriga
+
+[ufw_config]

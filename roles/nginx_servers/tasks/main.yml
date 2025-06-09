@@ -1,5 +1,3 @@
-# Note: commented lines are before host_vars used
-
 - name: install nginx
   tags: nginx
   package:

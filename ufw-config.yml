@@ -1,0 +1,55 @@
+---
+#
+# ufw-config.yml
+# usage:  ansible-playbook ufw-config.yml
+#
+# Once run, log into the servers and run:
+#   sudo ufw enable
+#   sudo ufw status numbered
+#
+# Then, remove the server from the [ufw_config] group in the inventory file.
+
+- hosts: ufw_config
+  become: true
+  tasks:
+
+  - name: install ufw
+    tags: ufw
+    apt:
+      name: ufw
+      state: latest
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint", "Pop!_OS"]
+
+  - name: start and enable ufw
+    tags: ufw
+    service:
+      name: ufw
+      state: started
+      enabled: yes
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint", "Pop!_OS"]
+
+
+  - name: run ufw-config-ssh.sh to configure ssh access (All servers)
+    tags: ufw
+    ansible.builtin.script:
+      cmd: ./ufw-config-ssh.sh
+    register: script_output
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint", "Pop!_OS"]
+
+  - name: Print script output
+    debug:
+      var: script_output.stdout
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint", "Pop!_OS"]
+
+
+  - name: run ufw-config-semaphore.sh to configure semaphore access (semaphore server only)
+    tags: ufw
+    ansible.builtin.script:
+      cmd: ./ufw-config-semaphore.sh
+    register: script_output
+    when: ansible_hostname in ["semaphore"]
+
+  - name: Print script output
+    debug:
+      var: script_output.stdout
+    when: ansible_hostname in ["semaphore"]

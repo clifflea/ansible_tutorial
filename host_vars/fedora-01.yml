@@ -1,5 +1,4 @@
-apache_package_name: httpd
-apache_service: httpd
-php_package_name: php
 ssh_users: "cleong zappa"
 ssh_template_file: sshd_config_rhel.j2
+nginx_package_name: nginx
+nginx_service: nginx
